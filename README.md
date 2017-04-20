@@ -1,5 +1,7 @@
 # workpop-base
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Workpop/graphql-metrics.svg?token=1d22adbab341166dd563f3e035cebfe82e4d22392dad44b43ffb403cf266518c)](https://greenkeeper.io/)
+
 A base module to write new NPM Modules
 
 ## Basic Usage
