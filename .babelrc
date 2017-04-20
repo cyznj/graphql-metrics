@@ -4,6 +4,7 @@
     "es2015"
   ],
   "plugins": [
+    "transform-class-properties",
     "transform-flow-strip-types",
     "transform-object-assign",
     "transform-object-rest-spread",

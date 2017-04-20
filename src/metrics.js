@@ -35,23 +35,24 @@ function _zeroData() {
   );
 }
 
-function _currentInterval() {
-  return Math.floor(Date.now() / metricIntervalMs);
-}
-
 export default class WPGraphQLMetrics {
   constructor({
     influxSettings,
     site,
     hostname,
     logFunc,
-    metricIntervalMs,
+    metricIntervalMs = 60000,
     enableGraphQLMetrics = true,
   }) {
     this.resolvers = [];
     this.logFunc = logFunc;
     this.enableGraphQLMetrics = enableGraphQLMetrics;
-    this.influx = new Influx.InfluxDB(influxSettings);
+
+    if (!!influxSettings) {
+      this.influx = new Influx.InfluxDB(influxSettings);
+    } else {
+      this.enableGraphQLMetrics = false;
+    }
     this.site = site;
     this.hostname = hostname;
     this.metricIntervalMs = metricIntervalMs; // how often to flush aggregated metrics to influx
@@ -61,18 +62,22 @@ export default class WPGraphQLMetrics {
     this.resolvers.push(resolverName);
   }
 
-  initMetrics() {
-    const firstInterval = _currentInterval();
+  initMetrics = () => {
+    const firstInterval = this._currentInterval();
     aggregatedData[firstInterval] = _zeroData();
     aggregatedData[firstInterval + 1] = _zeroData();
   }
 
-  runMetricInterval() {
+  runMetricInterval = () => {
     setInterval(this._flushMetrics, this.metricIntervalMs);
   }
 
-  _flushMetrics() {
-    const currentInterval = _currentInterval();
+  _currentInterval = () => {
+    return Math.floor(Date.now() / this.metricIntervalMs);
+  }
+
+  _flushMetrics = () => {
+    const currentInterval = this._currentInterval();
 
     // initialize the next interval
     const nextInterval = currentInterval + 1;
@@ -84,11 +89,11 @@ export default class WPGraphQLMetrics {
     forIn(aggregatedData, (value, key) => {
       if (key < currentInterval) {
         points.push({
-          timestamp: new Date(key * metricIntervalMs),
+          timestamp: new Date(key * this.metricIntervalMs),
           measurement,
           tags: {
-            site,
-            hostname,
+            site: this.site,
+            hostname: this.hostname,
           },
           fields: value,
         });
@@ -98,7 +103,7 @@ export default class WPGraphQLMetrics {
     });
 
     if (this.enableGraphQLMetrics) {
-      influx.writePoints(points).catch((err) => {
+      this.influx.writePoints(points).catch((err) => {
         this.logFunc(
           'WPGRAPHQL',
           'ERROR',
@@ -109,11 +114,11 @@ export default class WPGraphQLMetrics {
     }
   }
 
-  logMetrics({ resolverName, responseTime, status }) {
+  logMetrics = ({ resolverName, responseTime, status }) => {
     if (!this.enableGraphQLMetrics) {
       return;
     }
-    const currentInterval = _currentInterval();
+    const currentInterval = this._currentInterval();
     const currentData = aggregatedData[currentInterval];
     if (currentData) {
       const countKey = 'count';

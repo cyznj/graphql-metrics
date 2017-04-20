@@ -41,7 +41,7 @@ function _createInstrumentedResolver(
   metrics.addResolverMetric(resolverName);
   return (root: Object, resolverArgs: Object, context: Object): ?any => {
     const startTime = process.hrtime();
-    const callId = crypto.randomBytes(256).toString('hex'); // used to correlate the start event and the completed event
+    const callId = crypto.randomBytes(16).toString('hex'); // used to correlate the start event and the completed event
     const baseLogEvent = {
       callId,
       resolverName,
