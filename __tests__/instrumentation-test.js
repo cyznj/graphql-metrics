@@ -34,4 +34,12 @@ test('Log Func should be called', (t) => {
   stubResolvers.Query.foobar();
 
   t.truthy(stub.called);
+
+  t.truthy(stub.calledWith('info'));
+
+  stubResolvers.Mutation.setfoobar()
+
+  t.truthy(stub.called);
+
+  t.truthy(stub.calledWith('info'));
 });
