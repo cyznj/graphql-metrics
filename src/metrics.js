@@ -1,6 +1,5 @@
 import { floor, forIn, get, reduce, toLower, unset } from 'lodash';
 
-const os = require('os');
 const Influx = require('influx');
 
 const measurement = 'graphql_aggregated_response';
