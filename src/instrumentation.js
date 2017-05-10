@@ -5,7 +5,7 @@ const crypto = require('crypto');
 
 function _elapsedTime(startHrtime: [number, number]): number {
   const diff = process.hrtime(startHrtime);
-  return (diff[0] * 1000) + Math.round(diff[1] / 1000000)); // return milliseconds
+  return (diff[0] * 1000) + Math.round(diff[1] / 1000000); // return milliseconds
 }
 
 function _statusCodeForError(err: Error): number {
