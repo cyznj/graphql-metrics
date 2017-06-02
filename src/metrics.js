@@ -39,6 +39,7 @@ export default class WPGraphQLMetrics {
     influxSettings,
     site,
     hostname,
+    service,
     logFunc,
     metricIntervalMs = 60000,
     enableGraphQLMetrics = true,
@@ -54,6 +55,7 @@ export default class WPGraphQLMetrics {
     }
     this.site = site;
     this.hostname = hostname;
+    this.service = service;
     this.metricIntervalMs = metricIntervalMs; // how often to flush aggregated metrics to influx
   }
 
@@ -93,6 +95,7 @@ export default class WPGraphQLMetrics {
           tags: {
             site: this.site,
             hostname: this.hostname,
+            service: this.service,
           },
           fields: value,
         });
