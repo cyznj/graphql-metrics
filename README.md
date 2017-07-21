@@ -2,12 +2,14 @@
 
 GraphQL-metrics instruments GraphQL resolvers, logging response times and statuses (if there was an error or not) to the console as well as to InfluxDB.
 
+## Usage
+
 To install:
 ```
 yarn add @workpop/graphql-metrics
 ```
 
-## Configuring the metrics logger
+### Configuring the metrics logger
 ```javascript
 import { WPGraphQLMetrics } from '@workpop/graphql-metrics';
 
@@ -34,7 +36,7 @@ export const Metrics = new WPGraphQLMetrics({
 });
 ```
 
-## Instrumenting your resolvers
+### Instrumenting your resolvers
 ```javascript
 import { instrumentResolvers } from '@workpop/graphql-metrics';
 import { beersOnTap, pourBeer } from './resolvers';
@@ -69,7 +71,9 @@ const instrumentedResolvers = instrumentResolvers(
 
 ```
 
-### Output
+## Output
+
+### Log Output
 Each resolver invocation will produce 2 logs - one for start and one for completion.  A callId property is logged to allow correlation between the start and completion log for a single resolver invocation.  `elapsedTime` is measured in milliseconds.
 
 Here are some sample logs:
@@ -124,6 +128,7 @@ Completion log on error:
 }
 ```
 
+### Data logged to InfluxDB
 Metrics for each resolver are aggregated on a one minute interval and flushed to InfluxDB once per minute.
 The following metrics are sent to InfluxDB for each resolver
 
