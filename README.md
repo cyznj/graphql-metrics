@@ -68,3 +68,69 @@ const instrumentedResolvers = instrumentResolvers(
 );
 
 ```
+
+### Output
+Each resolver invocation will produce 2 logs - one for start and one for completion.  A callId property is logged to allow correlation between the start and completion log for a single resolver invocation.  `elapsedTime` is measured in milliseconds.
+
+Here are some sample logs:
+
+Start log:
+```
+2017-07-21T18:09:51+00:00 INFO [WPGRAPHQL]
+{
+    "callId": "ca9f0dfc93455b7c8939fcb2e9f31404",
+    "resolverName": "beersOnTap",
+    "resolverArgs": {
+        "search": "guiness"
+    },
+    "context": {
+        "userId": "abc123"
+    }
+}
+```
+
+Completion log on success:
+```
+2017-07-21T18:09:51+00:00 INFO [WPGRAPHQL]
+{
+    "callId": "ca9f0dfc93455b7c8939fcb2e9f31404",
+    "resolverName": "beersOnTap",
+    "resolverArgs": {
+        "search": "guiness"
+    },
+    "context": {
+        "userId": "abc123"
+    }
+    "elapsedTime": 2,
+    "status": 200
+}
+```
+
+Completion log on error:
+```
+2017-07-21T18:09:51+00:00 INFO [WPGRAPHQL]
+{
+    "callId": "ca9f0dfc93455b7c8939fcb2e9f31404",
+    "resolverName": "beersOnTap",
+    "resolverArgs": {
+        "search": "guiness"
+    },
+    "context": {
+        "userId": "abc123"
+    }
+    "elapsedTime": 2,
+    "status": 404,
+    "err": "Beer named guiness not found"
+}
+```
+
+Metrics for each resolver are aggregated on a one minute interval and flushed to InfluxDB once per minute.
+The following metrics are sent to InfluxDB for each resolver
+
+```
+${resolver}_count
+${resolver}_4XX_count
+${resolver}_5XX_count
+${resolver}_total_response_time
+${resolver}_ave_response_time
+```
