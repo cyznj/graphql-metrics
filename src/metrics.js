@@ -1,6 +1,9 @@
-import { floor, forIn, get, reduce, toLower, unset } from 'lodash';
+import Logger from '@workpop/simple-logger';
+import { floor, forIn, get, isEmpty, reduce, toLower, unset } from 'lodash';
 
 const Influx = require('influx');
+
+const logger = new Logger('GRAPHQL-METRICS');
 
 const measurement = 'graphql_aggregated_response';
 
@@ -34,6 +37,10 @@ function _zeroData() {
   );
 }
 
+function isInfluxConfigured(influxSettings) {
+  return !isEmpty(get(influxSettings, 'INFLUX_DATABASE'));
+}
+
 export default class WPGraphQLMetrics {
   constructor({
     influxSettings,
@@ -48,9 +55,10 @@ export default class WPGraphQLMetrics {
     this.logFunc = logFunc;
     this.enableGraphQLMetrics = enableGraphQLMetrics;
 
-    if (!!influxSettings) {
+    if (isInfluxConfigured(influxSettings)) {
       this.influx = new Influx.InfluxDB(influxSettings);
     } else {
+      logger.warn('Influx not properly configured - will not be sending metrics to Influx');
       this.enableGraphQLMetrics = false;
     }
     this.site = site;

@@ -10,7 +10,7 @@
     "test": "ava --concurrency=5",
     "test:watch": "npm run test -- --watch",
     "release": "./release.sh",
-    "lint": "eslint .",
+    "lint": "eslint ./src",
     "flow": "flow check",
     "fix": "eslint . --fix",
     "build": "babel ./src --ignore test --out-dir ./lib",
@@ -54,6 +54,7 @@
     "standard-version": "^4.0.0"
   },
   "dependencies": {
+    "@workpop/simple-logger": "^1.0.0",
     "babel-runtime": "6.x.x",
     "influx": "^5.0.7",
     "lodash": "^4.17.4"
