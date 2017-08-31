@@ -38,7 +38,7 @@ function _zeroData() {
 }
 
 function isInfluxConfigured(influxSettings) {
-  return !isEmpty(get(influxSettings, 'INFLUX_DATABASE'));
+  return !isEmpty(get(influxSettings, 'database'));
 }
 
 export default class WPGraphQLMetrics {
